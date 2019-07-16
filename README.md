@@ -90,7 +90,7 @@ Despite what the previous step looked like it was doing, that didn't generate re
 ```
 sphinx-apidoc -o source/ ../your_package
 ```
-(Replace `your_package` with the actual name of the folder)
+(Replace `your_package` with the actual name of the folder, and if there's no `source` folder, replace `source/` with `.`)
 
 It generated some files inside the `/docs` folder - now look for the file `index.rst` (will be inside `/source` if you chose separate source/build directories), and edit it (uses `rst` format, which is similar to markdown, but not the same and not compatible). At the end of the file, you should find something like this:
 ```
@@ -165,7 +165,7 @@ napoleon_use_ivar = True
 
 (The following assumes you are building the docs for ReadTheDocs, for local docs the steps will be different as you need to manually add the theme which RTD adds automatically)
 
-Optionally, if selected in step 2 to have links to the source code, and you want docs to render with a better theme than the ugly default white, add:
+Optionally, if you selected in step 2 to have links to the source code, and you want docs to render with a better theme than the ugly default white, add:
 ```python
 extensions = [
     'sphinx.ext.autodoc',
@@ -276,7 +276,9 @@ MOCK_MODULES = ['tensorflow', 'pandas']
 sys.modules.update((mod_name, mock.MagicMock()) for mod_name in MOCK_MODULES)
 ```
 
-For more problematic cases, RTD will define an environment variable `READTHEDOCS` (`os.environ.get('READTHEDOCS')`) which you can use to tweak or skip things conditionally. For example, if you want to offer the possibility of using two equivalent packages as backend, but don't want to force any as dependency, you can adjust your `setup.py` and/or `conf.py` to have a mock of it.
+(depending on whether you have a `source/` folder, it might notbe necessary to insert the syspath above)
+
+For more problematic cases, RTD will define an environment variable `READTHEDOCS` (`os.environ.get('READTHEDOCS')`) which you can use to tweak or skip things conditionally. For example, if you want to offer the possibility of using two equivalent packages as backend, but don't want to force any as dependency, you can adjust your `setup.py` and/or `conf.py` to have a mock of it, or you can have a special `setup` command in your `setup.py` that will be executed only for RTD.
 
 See example in package [findblas](https://github.com/david-cortes/findblas/blob/master/findblas/distutils.py) which wants to have MKL or OpenBLAS without having to list one of them as a requirement.
 
